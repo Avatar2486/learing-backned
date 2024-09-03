@@ -1,9 +1,10 @@
-import db from "../config/db.js";
+import connectDB from "../config/db.js";
 
 class Users {
-    static getAllUsers(){
+    static async getAllUsers(){
+        let client = await connectDB()
         const query = `SELECT * FROM users`
-        return db.query(query);
+        return await client.query(query);
     }
 
 }

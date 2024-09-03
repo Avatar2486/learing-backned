@@ -1,22 +1,30 @@
-import pg from "pg";
+import pg from 'pg';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
 const { Pool } = pg;
 
-const db = new Pool({
-	host: process.env.DB_HOST,
-	user: process.env.DB_USER,
-	password: process.env.DB_PASSWORD,
-	database: "db_avatar",
-	max: 20,
-	idleTimeoutMillis: 30000,
-	connectionTimeoutMillis: 2000,
+// Create a new Pool instance
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+  ssl: { rejectUnauthorized: false } // Optional, needed if you're connecting to a cloud-hosted Postgres with SSL
 });
 
-db.connect((err, res) => {
-	if (err) {
-		console.error("Error connecting to the database:", err.stack);
-	} else {
-		console.log("Connected to the PostgreSQL database.");
-	}
-});
+async function connectDB() {
+  try {
+    // Connect to the database
+    const client = await pool.connect();
 
-export default db;
+    return client; // Return the client for use in other files
+  } catch (err) {
+    console.error('Error connecting to PostgreSQL database:', err);
+    throw err;
+  }
+}
+
+export default connectDB  // Export the function

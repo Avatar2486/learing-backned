@@ -8,9 +8,10 @@ const app = express();
 app.use(cors);
 
 const port = process.env.PORT || 8080;
-app.use(users);
+app.use(process.env.ROOT_PATH, users);
+// console.log("Port: " + port);
 
-app.listen(port,(err, res) => {
-    if(err) throw err;
-    console.log(`Server is running on port ${port}`);
+app.listen(port, (err, res) => {
+	if (err) throw err;
+	console.log(`Server is running on port ${port}`);
 });
